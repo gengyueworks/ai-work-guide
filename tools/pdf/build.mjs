@@ -80,7 +80,10 @@ execFileSync(chrome, [
 
 if (!existsSync(OUT)) throw new Error("Chrome 未产出 PDF");
 const buf = await readFile(OUT);
-const pages = Number(/\/Type \/Pages[\s\S]*?\/Count (\d+)/.exec(buf.toString("latin1"))?.[1] ?? 0);
+// 页树是分片的：/Type /Pages 会出现多次（每个中间节点带自己的 /Count），
+// 取第一个会把 16 页报成 8 页。取最大值才是整本书的页数。
+const counts = [...buf.toString("latin1").matchAll(/\/Count (\d+)/g)].map((m) => Number(m[1]));
+const pages = counts.length ? Math.max(...counts) : 0;
 if (buf.length < 30_000) throw new Error(`PDF 只有 ${buf.length} 字节，明显不是整本书，中止`);
 if (pages < 1) throw new Error("PDF 里读不到页数，检查 Chrome 版本与打印参数");
 await rm(PRINT_HTML, { force: true });

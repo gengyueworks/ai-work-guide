@@ -57,6 +57,7 @@ main{padding:calc(var(--nav-h) + 32px) 24px 96px calc(var(--side-w) + 24px)}
 .sec-h h2{font-size:21px;margin:0;font-weight:600}
 .sec-h .shown{margin-left:auto;font-size:12.5px;color:var(--t3);font-variant-numeric:tabular-nums}
 .intro{color:var(--t2);font-size:13.5px;max-width:74ch;margin:0 0 14px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:#f2f3f5;border:1px solid var(--divider);border-radius:4px;padding:0 4px}
 .card{background:var(--bg-elv);border:1px solid var(--divider);border-radius:12px;padding:16px 18px;margin-bottom:12px}
 .card h3{font-size:16.5px;margin:0 0 10px;line-height:1.5;font-weight:600}
 .card h3 .no{color:var(--t3);font-weight:500;font-variant-numeric:tabular-nums;margin-right:6px}
@@ -314,6 +315,9 @@ function linkify(s,hereSec){
     return `<button class="xref" data-ref="${sec}:${n}">${label}<span style="color:var(--t3);font-size:12px">（${esc(t.title)}）</span></button>`;
   });
   s=s.replace(/(https?:\/\/[^\s<）)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  // 正文里的 **强调** 与 `行内代码` 一直是原样吐星号的；esc 已跑过，这里只会新增标签，不会注入。
+  s=s.replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>");
+  s=s.replace(/`([^`\n]+)`/g,"<code>$1</code>");
   return s;
 }
 function chip(t,v,cls){return v?`<span class="chip ${cls||""}">${t}${v}</span>`:"";}
@@ -327,7 +331,7 @@ function render(){
     shown+=es.length;
     if(!es.length)continue;
     html.push(`<div class="sec-h"><h2>${esc(c.title)}</h2><span class="shown">${es.length} / ${c.entries.length} 条</span></div>`);
-    if(c.intro&&!S.q)html.push(`<p class="intro">${esc(c.intro)}</p>`);
+    if(c.intro&&!S.q)html.push(`<p class="intro">${linkify(c.intro,sec)}</p>`);
     for(const e of es){
       const blob=Object.values(e.raw).join(" ")+" "+(e.tags?.适合||[]).join(" ");
       const L=(x)=>linkify(x,sec);
