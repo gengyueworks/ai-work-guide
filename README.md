@@ -119,7 +119,9 @@ python3 -m http.server 8000
 | `node tools/check-refs.mjs` | `引用 N 处；异常判定 0 处；…结构问题 0 条` | 生成 `docs/引用对照.md` |
 | `node tools/check-refs.mjs --check` | 同上，异常时退出码 1 | CI 门禁 |
 | `node tools/sync-stats.mjs --check` | `sync-stats --check 通过：N 条 / M 节` | CI 门禁 |
-| `node tools/offline/build.mjs` | `已生成 dist/…-offline.html` | 出离线单文件 |
+| `node tools/offline/build.mjs` | `已生成 dist/…-offline.html` | 出离线单文件；先跑它才有 PDF 的输入 |
+| `node tools/pdf/build.mjs` | `已生成 dist/…pdf` + `N 页 / M KB` | 出 A4 PDF（要 Chrome） |
+| `node tools/epub/build.mjs` | `已生成 dist/…epub` + `N 章 / M 条` | 出 EPUB（要 pandoc） |
 
 ## 工程约定
 

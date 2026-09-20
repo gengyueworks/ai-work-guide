@@ -50,6 +50,11 @@ function parseTag(line) {
     }
     const key = part.slice(0, eq);
     const value = part.slice(eq + 1);
+    // 适合= 是可选的多值维度（用 | 分隔），不参与性价比计算，也不进必填校验。
+    if (key === "适合") {
+      tags[key] = value.split("|").filter(Boolean);
+      continue;
+    }
     if (!COST_ENUMS[key]) {
       problems.push(`成本标签出现未知维度「${key}」，允许值：${Object.keys(COST_ENUMS).join("/")}`);
       continue;

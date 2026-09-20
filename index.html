@@ -40,6 +40,8 @@ input[type=search],select{width:100%;padding:8px 10px;border:1px solid var(--div
 .seg{display:flex;gap:6px;flex-wrap:wrap}
 .seg button{flex:1;min-width:40px;padding:5px 8px;font-size:12.5px;border:1px solid var(--divider);background:var(--bg-elv);color:var(--t2);border-radius:7px;cursor:pointer}
 .seg button[aria-pressed=true]{border-color:var(--brand-1);background:var(--brand-2);color:var(--brand-1);font-weight:600}
+/* 身份名长短不一，按内容宽度排；沿用 flex:1 会把「程序员」挤成两行。 */
+#f-role button{flex:0 1 auto;min-width:0;padding:5px 10px}
 .reset{width:100%;padding:6px 14px;border:1px solid var(--divider);border-radius:20px;font-size:13px;color:var(--t2);background:var(--bg-elv);cursor:pointer}
 .reset:hover{border-color:var(--brand-1);color:var(--brand-1)}
 .hint{font-size:12px;color:var(--t3);line-height:1.6}
@@ -62,6 +64,7 @@ main{padding:calc(var(--nav-h) + 32px) 24px 96px calc(var(--side-w) + 24px)}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{font-size:11.5px;padding:2px 8px;border-radius:20px;border:1px solid var(--divider);color:var(--t3)}
 .chip.ratio-极高{border-color:var(--brand-1);color:var(--brand-1);font-weight:600}
+.chip.role{background:var(--brand-2);border-color:var(--brand-2);color:var(--brand-1);font-weight:600}
 .chip.g-A{color:var(--a);border-color:var(--a)}
 .chip.g-B{color:var(--b);border-color:var(--b)}
 .chip.warn{color:#a4441f;border-color:#e0b8a8}
@@ -83,6 +86,31 @@ details.fine b{color:var(--t2);font-weight:600}
   .filter-btn{display:inline-flex!important}
 }
 .filter-btn{display:none}
+.cover{display:none}
+@media print{
+  @page{size:A4;margin:15mm 14mm}
+  body{background:#fff;font-size:10.5pt;line-height:1.62;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  nav,aside,.backdrop,.pop,.filter-btn,.sec-h .shown{display:none!important}
+  main{padding:0}
+  .doc{max-width:none}
+  .cover{display:block;border-bottom:2px solid var(--brand-1);padding-bottom:14pt;margin-bottom:16pt}
+  .cover h2{font-size:22pt;line-height:1.25;margin:0 0 6pt;letter-spacing:-.02em}
+  .cover p{margin:0 0 4pt;color:var(--t2);font-size:10pt}
+  .cover .meta{color:var(--t3);font-size:9pt;margin-top:10pt}
+  .doc-head h1{font-size:17pt}
+  .sec-h{break-after:avoid;margin-top:16pt;padding-top:0;border-top:0}
+  .sec-h h2{font-size:13.5pt}
+  .intro{font-size:9.5pt}
+  .card{break-inside:avoid;border:0;border-radius:0;padding:0 0 7pt;margin:0 0 7pt;border-bottom:1px solid var(--divider)}
+  .card h3{font-size:11.5pt;margin-bottom:6pt}
+  .plain{font-size:11pt;padding:7pt 9pt}
+  .chip{font-size:8pt}
+  details.fine{font-size:9.5pt}
+  details.fine summary{color:var(--t1);font-weight:600;cursor:default}
+  details.fine summary::-webkit-details-marker{display:none}
+  .xref{color:var(--t1);border-bottom:0;cursor:inherit}
+  .foot{font-size:8.5pt}
+}
 </style>
 </head>
 <body>
@@ -104,6 +132,10 @@ details.fine b{color:var(--t2);font-weight:600}
   <div class="group">
     <p class="gt">章节</p>
     <select id="f-ch"><option value="">全部</option></select>
+  </div>
+  <div class="group" id="g-role" hidden>
+    <p class="gt">你是哪一类人</p>
+    <div class="seg" id="f-role"></div>
   </div>
   <div class="group">
     <p class="gt">花钱</p>
@@ -152,6 +184,9 @@ details.fine b{color:var(--t2);font-weight:600}
 </main>
 <script>
 const COST_ENUMS={钱:["0","少","多"],时间:["少","中","多"],毅力:["否","些","是"],收益:["大","中","小"],口径:["时间","钱","职业","自由"]};
+// PDF 构建注入 __PRINT__：折叠的 <details> 在打印时不会展开，细字（成本/收益/来源）会整块从 PDF 里消失。
+const PRINT=window.__PRINT__===true;
+addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
 const LENS_LABEL={时间:"时间与精力",钱:"金钱与保障",职业:"职业安全",自由:"人身自由与法律安全"};
 const COST_KEYS=["钱","时间","毅力"];
 // ratioOf 必须与 tools/lib/book.mjs 中的同名函数保持一致，改一处要改两处。
@@ -162,7 +197,7 @@ const FIELD_RE=/^- \*\*(.+?)\*\*[:：]\s*(.*)$/;
 const BARE_RE=/^- (成本|说人话|收益|证据等级|来源|备注)[:：]\s*(.*)$/;
 const FIELDS=["成本","说人话","收益","证据等级","来源","备注"];
 
-function parseTag(line){const m=TAG_RE.exec(line.trim());if(!m)return null;const t={};for(const p of m[1].split(/\s+/).filter(Boolean)){const i=p.indexOf("=");if(i<0)continue;t[p.slice(0,i)]=p.slice(i+1);}return t;}
+function parseTag(line){const m=TAG_RE.exec(line.trim());if(!m)return null;const t={};for(const p of m[1].split(/\s+/).filter(Boolean)){const i=p.indexOf("=");if(i<0)continue;const k=p.slice(0,i),v=p.slice(i+1);if(k==="适合"){t[k]=v.split("|").filter(Boolean);continue;}t[k]=v;}return t;}
 
 // 与 tools/lib/book.mjs 的 pickIntro() 同算法：h1 后第一段正文（blockquote 或裸段落）。
 function pickIntro(lines,h1Idx){
@@ -243,7 +278,7 @@ async function load(){
   return rs.sort((a,b)=>a.file.localeCompare(b.file));
 }
 
-const S={q:"",ch:"",钱:new Set(),时间:new Set(),毅力:new Set(),口径:new Set(),ratio:new Set(),grade:new Set(),dispute:false,todo:false};
+const S={q:"",ch:"",适合:new Set(),钱:new Set(),时间:new Set(),毅力:new Set(),口径:new Set(),ratio:new Set(),grade:new Set(),dispute:false,todo:false};
 
 function seg(id,key,vals){
   const el=document.getElementById(id);
@@ -253,6 +288,7 @@ function seg(id,key,vals){
 function has(text,needle){return (text||"").indexOf(needle)>=0;}
 function match(e){
   if(S.ch&&e.file!==S.ch)return false;
+  if(S.适合.size&&!(e.tags?.适合||[]).some(r=>S.适合.has(r)))return false;
   if(S.钱.size&&!S.钱.has(e.tags?.钱))return false;
   if(S.时间.size&&!S.时间.has(e.tags?.时间))return false;
   if(S.毅力.size&&!S.毅力.has(e.tags?.毅力))return false;
@@ -293,12 +329,13 @@ function render(){
     html.push(`<div class="sec-h"><h2>${esc(c.title)}</h2><span class="shown">${es.length} / ${c.entries.length} 条</span></div>`);
     if(c.intro&&!S.q)html.push(`<p class="intro">${esc(c.intro)}</p>`);
     for(const e of es){
-      const blob=Object.values(e.raw).join(" ");
+      const blob=Object.values(e.raw).join(" ")+" "+(e.tags?.适合||[]).join(" ");
       const L=(x)=>linkify(x,sec);
       html.push(`<article class="card" id="${e.file.replace(/\W/g,"")}-${e.number}">
         <h3><span class="no">${e.number}.</span>${L(e.title)}</h3>
         ${e.raw["说人话"]?`<p class="plain">${L(e.raw["说人话"])}</p>`:""}
         <div class="chips">
+          ${(e.tags?.适合||[]).length?`<span class="chip role">写给 ${e.tags.适合.join(" · ")}</span>`:""}
           ${chip("性价比 ",e.ratio,"ratio-"+e.ratio)}
           ${chip("证据 ",e.grade,"g-"+e.grade)}
           ${chip("花钱 ",e.tags?.钱)}${chip("时间 ",e.tags?.时间)}${chip("毅力 ",e.tags?.毅力)}
@@ -306,7 +343,7 @@ function render(){
           ${has(blob,"争议")?'<span class="chip warn">有争议</span>':""}
           ${has(blob,"待核实")?'<span class="chip warn">待核实</span>':""}
         </div>
-        <details class="fine"><summary>成本 · 收益 · 来源 · 备注</summary>
+        <details class="fine"${PRINT?" open":""}><summary>成本 · 收益 · 来源 · 备注</summary>
           <p><b>成本：</b>${L(e.raw["成本"])}</p>
           <p><b>收益：</b>${L(e.raw["收益"])}</p>
           <p><b>来源：</b>${L(e.raw["来源"])}</p>
@@ -352,10 +389,17 @@ async function init(){
   sel.onchange=()=>{S.ch=sel.value;render();};
   seg("f-money","钱",COST_ENUMS.钱);seg("f-time","时间",COST_ENUMS.时间);seg("f-grit","毅力",COST_ENUMS.毅力);
   seg("f-lens","口径",COST_ENUMS.口径.map(v=>v));seg("f-ratio","ratio",["极高","高","一般"]);seg("f-grade","grade",["A","B","C"]);
+  // 身份选项从正文里长出来：条目写了 适合= 才会出现，避免筛出一个 0 条的空身份。
+  const roleCnt=new Map();
+  for(const c of CORPUS)for(const e of c.entries)for(const r of e.tags?.适合||[])roleCnt.set(r,(roleCnt.get(r)||0)+1);
+  if(roleCnt.size){
+    document.getElementById("g-role").hidden=false;
+    seg("f-role","适合",[...roleCnt.keys()].sort((a,b)=>roleCnt.get(b)-roleCnt.get(a)||a.localeCompare(b,"zh")));
+  }
   document.getElementById("f-q").oninput=e=>{S.q=e.target.value.trim();render();};
   document.getElementById("f-dispute").onchange=e=>{S.dispute=e.target.checked;render();};
   document.getElementById("f-todo").onchange=e=>{S.todo=e.target.checked;render();};
-  document.getElementById("reset").onclick=()=>{S.q="";S.ch="";["钱","时间","毅力","口径","ratio","grade"].forEach(k=>S[k].clear());S.dispute=S.todo=false;
+  document.getElementById("reset").onclick=()=>{S.q="";S.ch="";["适合","钱","时间","毅力","口径","ratio","grade"].forEach(k=>S[k].clear());S.dispute=S.todo=false;
     document.getElementById("f-q").value="";document.getElementById("f-ch").value="";document.getElementById("f-dispute").checked=false;document.getElementById("f-todo").checked=false;
     document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed","false"));
     render();};

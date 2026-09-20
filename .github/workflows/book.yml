@@ -22,6 +22,20 @@ jobs:
         run: node tools/offline/build.mjs
         env:
           GIT_SHA: ${{ github.sha }}
+      - name: 装 pandoc（EPUB 需要；PDF 用 runner 自带的 Chrome）
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq pandoc
+      - name: A4 PDF（直接打印站点自己的 CSS，不另排一套版）
+        run: node tools/pdf/build.mjs
+        env:
+          GIT_SHA: ${{ github.sha }}
+      - name: EPUB（Send to Kindle 可用）
+        run: node tools/epub/build.mjs
+      - name: 三样齐了才准发布（Release 正文写着「三样电子版」，缺一样就是虚假宣传）
+        run: |
+          ls -l dist/
+          test -s dist/ai-work-guide-offline.html
+          test -s dist/ai-work-guide.pdf
+          test -s dist/ai-work-guide.epub
       - name: 发布到固定 Release（仅 main）
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: softprops/action-gh-release@v2
