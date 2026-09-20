@@ -16,6 +16,9 @@ export const COST_ENUMS = {
 
 export const FIELD_ORDER = ["成本", "说人话", "收益", "证据等级", "来源", "备注"];
 
+// 「这条有没核到的东西」在正文里有三种写法，只认「待核实」会把法律类条目的坦白漏掉、把数字算小。
+export const TODO_RE = /待核实|未核到|未取到/;
+
 const TAG_RE = /^<!--\s*成本标签:\s*(.*?)\s*-->$/;
 const ENTRY_RE = /^###\s+(\d+)\.\s+(.+)$/;
 const FIELD_RE = /^-\s*\*\*(.+?)\*\*[:：]\s*(.*)$/;
@@ -229,7 +232,7 @@ export function countStats(corpus) {
     if (g in s) s[g] += 1;
     const blob = Object.values(e.raw).join(" ");
     if (blob.includes("争议")) s.争议 += 1;
-    if (blob.includes("待核实")) s.待核实 += 1;
+    if (TODO_RE.test(blob)) s.待核实 += 1;
     if (e.ratio) s[e.ratio] += 1;
     s.链接 += (blob.match(/https?:\/\/\S+/g) || []).length;
   }

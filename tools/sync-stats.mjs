@@ -18,7 +18,7 @@ const toc = corpus
 const readme = await readFile(ROOT + "/README.md", "utf8");
 const out = readme
   .replace(/<!-- BADGES:START -->[\s\S]*?<!-- BADGES:END -->/, `<!-- BADGES:START -->\n${badges}\n<!-- BADGES:END -->`)
-  .replace(/<!-- STATS:START -->[\s\S]*?<!-- STATS:END -->/, `<!-- STATS:START -->\n全书 ${s.entries} 条中 A 级 ${s.A} 条、B 级 ${s.B} 条、C 级 ${s.C} 条；${s.争议} 条标注争议、${s.待核实} 条含待核实数字。性价比极高 ${s.极高} 条、高 ${s.高} 条、一般 ${s.一般} 条。外部链接 ${s.链接} 个。\n<!-- STATS:END -->`)
+  .replace(/<!-- STATS:START -->[\s\S]*?<!-- STATS:END -->/, `<!-- STATS:START -->\n全书 ${s.entries} 条中 A 级 ${s.A} 条、B 级 ${s.B} 条、C 级 ${s.C} 条；${s.争议} 条标注争议、${s.待核实} 条写明有未核实事项。性价比极高 ${s.极高} 条、高 ${s.高} 条、一般 ${s.一般} 条。外部链接 ${s.链接} 个。\n<!-- STATS:END -->`)
   .replace(/<!-- TOC:START -->[\s\S]*?<!-- TOC:END -->/, `<!-- TOC:START -->\n| # | 节 | 条目 | A 级 |\n| --- | --- | --- | --- |\n${toc}\n<!-- TOC:END -->`);
 
 if (CHECK) {
