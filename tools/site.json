@@ -6,7 +6,7 @@
     "repo": "https://github.com/gengyueworks/ai-work-guide",
     "release": "https://github.com/gengyueworks/ai-work-guide/releases/latest",
     "license": "Unlicense，公有领域",
-    "commit": "PLACEHOLDER"
+    "commit": ""
   },
   "longDocs": [
     { "text": "被裁补偿计算表", "href": "docs/被裁补偿计算表.md" },

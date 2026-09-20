@@ -128,6 +128,14 @@ python3 -m http.server 8000
 - 离线构建在解析完正文后会断言每条都有证据等级、都能算出性价比档，缺就中止。离线单文件是被人直接转发出去的那一份，字段静默缺失只会表现为「筛选点了没反应」，所以宁可构建失败。
 - 广告位/产品推荐只走 `tools/site.json` + `tools/ads.json`，**不改 `index.html`**：在线版运行时抓这两个 json，离线版由构建注入 `window.__SITE__`；构建会把图内联成 data URI、把相对链接改写为在线版直链，所以转发出去的版本仍能把人带回站点。图 404 时该槽位整块隐藏，不留破图。
 - 产物不入库：`dist/` 已 gitignore。正文天天改，提交二进制只会过时并撑大历史。
+- 例外是 `og.png`：它是社交分享卡片，只出现在链接被转发的那一刻，必须是个真实存在的文件。所以**卡片上刻意不写条目数等会变的数字**——写了就会和 `sync-stats` 的结果对不上账。要改文案就改 `tools/og/og.html` 再重新截图：
+
+  ```bash
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
+    --hide-scrollbars --window-size=1200,630 --force-device-scale-factor=2 \
+    --screenshot=og.png "file://$PWD/tools/og/og.html"
+  ```
+
 - 三产物挂固定 Release，下载链接不变。
 
 ## License
