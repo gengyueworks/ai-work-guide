@@ -50,6 +50,12 @@ site.ads = await Promise.all(
 );
 // 相对链接在离线文件里点不开，一律改写成站点绝对地址。
 const absURL = (h) => (/^https?:\/\//.test(h) ? h : site.canonical.replace(/\/$/, "") + "/" + h.replace(/^\.\//, ""));
+// 长文链接会在页脚渲染成可见链接：文件不存在就是给读者一个 404，宁可构建失败也别留活链接在外面。
+for (const d of site.longDocs) {
+  if (!/^https?:\/\//.test(d.href) && !existsSync(ROOT + "/" + d.href.replace(/^\.\//, ""))) {
+    throw new Error(`site.json 的长文「${d.text}」指向 ${d.href}，但这个文件不存在：先写出来，或从 longDocs 删掉`);
+  }
+}
 site.longDocs = site.longDocs.map((d) => ({ ...d, href: absURL(d.href) }));
 site.ads = site.ads.map((a) => ({ ...a, href: absURL(a.href) }));
 

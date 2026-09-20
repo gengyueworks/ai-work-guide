@@ -9,8 +9,7 @@
     "commit": ""
   },
   "longDocs": [
-    { "text": "被裁补偿计算表", "href": "docs/被裁补偿计算表.md" },
-    { "text": "做 AI 产品要办哪些证", "href": "docs/做AI产品要办哪些证.md" }
+    { "text": "来源核实记录", "href": "docs/来源核实记录.md" }
   ],
   "ads": { "$include": "ads.json" }
 }
