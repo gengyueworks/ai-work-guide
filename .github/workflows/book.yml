@@ -1,0 +1,39 @@
+name: book
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 固定 Release 要写 tag `latest`，默认只读会让发布这步失败
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 引用与结构门禁（裸条号 / 锚点错位 / 缺字段 / 条号不连续）
+        run: node tools/check-refs.mjs --check
+      - name: 统计一致性门禁（README 徽章与目录必须跟 book/ 对齐）
+        run: node tools/sync-stats.mjs --check
+      - name: 离线单文件 HTML
+        run: node tools/offline/build.mjs
+        env:
+          GIT_SHA: ${{ github.sha }}
+      - name: 发布到固定 Release（仅 main）
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: 最新版（自动更新，链接固定）
+          body: |
+            三样电子版都在正文每次更新后自动重新生成，本链接固定不变。
+            **转发出去的那一份不会跟着更新**，以在线版为准。
+          files: |
+            dist/ai-work-guide-offline.html
+            dist/*.pdf
+            dist/*.epub
+          make_latest: true
+          allow_downloads: true

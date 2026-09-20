@@ -1,0 +1,16 @@
+{
+  "site": {
+    "name": "AI 时代高性价比工作指南",
+    "tagline": "每一条都回答两个问题：花掉什么，换回什么。",
+    "canonical": "https://gengyueworks.github.io/ai-work-guide/",
+    "repo": "https://github.com/gengyueworks/ai-work-guide",
+    "release": "https://github.com/gengyueworks/ai-work-guide/releases/latest",
+    "license": "Unlicense，公有领域",
+    "commit": "PLACEHOLDER"
+  },
+  "longDocs": [
+    { "text": "被裁补偿计算表", "href": "docs/被裁补偿计算表.md" },
+    { "text": "做 AI 产品要办哪些证", "href": "docs/做AI产品要办哪些证.md" }
+  ],
+  "ads": { "$include": "ads.json" }
+}

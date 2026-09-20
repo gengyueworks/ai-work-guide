@@ -1,0 +1,19 @@
+{
+  "_说明": "侧栏底部广告位。换推广只改这个文件，不动 index.html。图按 2:1 出图放 ads/（svg 或 webp 均可），或改 src 为外链。当前两张是示例创意，换成真图即生效。离线单文件构建会把图内联成 data URI，并把外部链接换成在线版直链——转出去的 PDF/HTML 仍然能把人带回站点。",
+  "slots": [
+    {
+      "label": "推广",
+      "title": "论文站",
+      "src": "ads/paper-site.svg",
+      "href": "https://example.com/paper-site",
+      "alt": "论文站：从 arXiv 正文里把数字和方法抠出来"
+    },
+    {
+      "label": "推广",
+      "title": "AI 学习营",
+      "src": "ads/ai-camp.svg",
+      "href": "https://example.com/ai-camp",
+      "alt": "AI 学习营"
+    }
+  ]
+}

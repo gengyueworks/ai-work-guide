@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 时代高性价比工作指南</title>
+<meta name="description" content="按性价比排序的 AI 时代工作指南：每一条建议写明成本、收益、证据等级和原始出处，可按花不花钱、花多少时间、要不要毅力筛选。">
+<link rel="canonical" href="https://gengyueworks.github.io/ai-work-guide/">
+<meta property="og:type" content="book">
+<meta property="og:title" content="AI 时代高性价比工作指南">
+<meta property="og:description" content="每一条都回答两个问题：花掉什么，换回什么。">
+<meta property="og:image" content="https://gengyueworks.github.io/ai-work-guide/og.png">
+<meta property="og:url" content="https://gengyueworks.github.io/ai-work-guide/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Book","name":"AI 时代高性价比工作指南","inLanguage":"zh-CN","bookFormat":"https://schema.org/EBook","numberOfPages":0,"license":"https://unlicense.org/","abstract":"按性价比排序的 AI 时代工作指南：每条写明成本、收益、证据等级与原始出处，可按钱、时间、毅力三个成本维度检索。","isAccessibleForFree":true}
+</script>
+<style>
+:root{
+  --bg:#f7f7f8;--bg-elv:#fff;--t1:#1a1a1e;--t2:#55555e;--t3:#8a8a94;
+  --divider:#e3e3e7;--brand-1:#2f6f4e;--brand-2:#e8f1ec;
+  --a:#2f6f4e;--b:#9a7b1f;--c:#8a8a94;--side-w:288px;--nav-h:56px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t1);font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+a{color:var(--brand-1)}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--bg-elv);border-bottom:1px solid var(--divider);z-index:20}
+nav .brand{font-weight:700;letter-spacing:-.01em}
+nav .stat{font-size:13px;color:var(--t3)}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid var(--divider);color:var(--t2)}
+.icon-btn:hover{border-color:var(--brand-1);color:var(--brand-1)}
+.icon-btn svg{width:18px;height:18px;fill:currentColor}
+nav .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+aside{position:fixed;top:var(--nav-h);bottom:0;left:0;width:var(--side-w);overflow-y:auto;padding:20px;background:var(--bg-elv);border-right:1px solid var(--divider)}
+.gt{font-size:12px;font-weight:600;color:var(--t3);letter-spacing:.04em;margin:0 0 8px;text-transform:uppercase}
+.group{margin-bottom:22px}
+input[type=search],select{width:100%;padding:8px 10px;border:1px solid var(--divider);border-radius:8px;font:inherit;background:var(--bg-elv);color:var(--t1)}
+.toggle{display:flex;gap:8px;align-items:baseline;font-size:13px;color:var(--t2);padding:2px 0;cursor:pointer}
+.toggle input{accent-color:var(--brand-1);margin:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:40px;padding:5px 8px;font-size:12.5px;border:1px solid var(--divider);background:var(--bg-elv);color:var(--t2);border-radius:7px;cursor:pointer}
+.seg button[aria-pressed=true]{border-color:var(--brand-1);background:var(--brand-2);color:var(--brand-1);font-weight:600}
+.reset{width:100%;padding:6px 14px;border:1px solid var(--divider);border-radius:20px;font-size:13px;color:var(--t2);background:var(--bg-elv);cursor:pointer}
+.reset:hover{border-color:var(--brand-1);color:var(--brand-1)}
+.hint{font-size:12px;color:var(--t3);line-height:1.6}
+.hint p{margin:4px 0}
+.ad{margin-bottom:14px}
+.ad a{display:block}
+.ad img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--divider)}
+main{padding:calc(var(--nav-h) + 32px) 24px 96px calc(var(--side-w) + 24px)}
+.doc{max-width:880px;margin:0 auto}
+.doc-head h1{font-size:30px;line-height:38px;margin:0 0 6px;letter-spacing:-.02em}
+.doc-head p{margin:0;color:var(--t2)}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin:34px 0 6px;padding-top:20px;border-top:1px solid var(--divider)}
+.sec-h h2{font-size:21px;margin:0;font-weight:600}
+.sec-h .shown{margin-left:auto;font-size:12.5px;color:var(--t3);font-variant-numeric:tabular-nums}
+.intro{color:var(--t2);font-size:13.5px;max-width:74ch;margin:0 0 14px}
+.card{background:var(--bg-elv);border:1px solid var(--divider);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.card h3{font-size:16.5px;margin:0 0 10px;line-height:1.5;font-weight:600}
+.card h3 .no{color:var(--t3);font-weight:500;font-variant-numeric:tabular-nums;margin-right:6px}
+.plain{font-size:16px;line-height:1.75;color:var(--t1);background:var(--brand-2);border-radius:9px;padding:10px 12px;margin:0 0 12px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:11.5px;padding:2px 8px;border-radius:20px;border:1px solid var(--divider);color:var(--t3)}
+.chip.ratio-极高{border-color:var(--brand-1);color:var(--brand-1);font-weight:600}
+.chip.g-A{color:var(--a);border-color:var(--a)}
+.chip.g-B{color:var(--b);border-color:var(--b)}
+.chip.warn{color:#a4441f;border-color:#e0b8a8}
+details.fine{font-size:13px;color:var(--t2)}
+details.fine summary{cursor:pointer;color:var(--t3);font-size:12.5px}
+details.fine p{margin:6px 0}
+details.fine b{color:var(--t2);font-weight:600}
+.xref{border-bottom:1px dashed var(--brand-1);color:var(--brand-1);cursor:pointer;background:none;border-top:0;border-left:0;border-right:0;font:inherit;padding:0}
+.pop{position:fixed;z-index:60;max-width:420px;background:var(--bg-elv);border:1px solid var(--divider);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.14);padding:14px 16px;font-size:13.5px}
+.pop .close{float:right;cursor:pointer;color:var(--t3);border:0;background:none;font-size:18px}
+.foot{max-width:880px;margin:40px auto 0;padding-top:18px;border-top:1px solid var(--divider);font-size:12.5px;color:var(--t3)}
+.empty{padding:60px 0;text-align:center;color:var(--t3)}
+.backdrop{display:none}
+@media(max-width:900px){
+  aside{transform:translateX(-100%);transition:.2s;z-index:30}
+  body.open aside{transform:none}
+  body.open .backdrop{display:block;position:fixed;inset:var(--nav-h) 0 0;background:rgba(0,0,0,.3);z-index:25}
+  main{padding-left:24px}
+  .filter-btn{display:inline-flex!important}
+}
+.filter-btn{display:none}
+</style>
+</head>
+<body>
+<nav>
+  <button class="icon-btn filter-btn" id="toggle-side" aria-label="筛选">☰</button>
+  <span class="brand">AI 时代高性价比工作指南</span>
+  <span class="stat" id="stat"></span>
+  <div class="right">
+    <a class="icon-btn" id="nav-repo" title="在 GitHub 上查看源仓库" aria-label="GitHub 仓库" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5.6 18.3 6 18.3 6c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg></a>
+    <a class="icon-btn" id="nav-dl" title="下载 PDF / EPUB / 离线 HTML" aria-label="下载" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10m0 0l-4-4m4 4l4-4M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+  </div>
+</nav>
+<div class="backdrop" id="backdrop"></div>
+<aside>
+  <div class="group">
+    <p class="gt">搜索</p>
+    <input type="search" id="f-q" placeholder="关键词：缓存、N+1、协议…" autocomplete="off">
+  </div>
+  <div class="group">
+    <p class="gt">章节</p>
+    <select id="f-ch"><option value="">全部</option></select>
+  </div>
+  <div class="group">
+    <p class="gt">花钱</p>
+    <div class="seg" id="f-money"></div>
+  </div>
+  <div class="group">
+    <p class="gt">花时间</p>
+    <div class="seg" id="f-time"></div>
+  </div>
+  <div class="group">
+    <p class="gt">要毅力</p>
+    <div class="seg" id="f-grit"></div>
+  </div>
+  <div class="group">
+    <p class="gt">换回什么</p>
+    <div class="seg" id="f-lens"></div>
+  </div>
+  <div class="group">
+    <p class="gt">性价比 <small style="font-weight:400">作者判断，同口径内可比</small></p>
+    <div class="seg" id="f-ratio"></div>
+  </div>
+  <div class="group">
+    <p class="gt">证据等级</p>
+    <div class="seg" id="f-grade"></div>
+    <label class="toggle"><input type="checkbox" id="f-dispute"> 只看标了争议的</label>
+    <label class="toggle"><input type="checkbox" id="f-todo"> 只看有待核实的</label>
+    <button class="reset" id="reset">清空筛选</button>
+  </div>
+  <div class="hint">
+    <p>同一组多选是「或」，不同组之间是「且」。</p>
+    <p>每节内按性价比从高到低排，检索不改变顺序。</p>
+    <p>正文与标签来自仓库 <a href="book/">book/</a> 下的文件，改正文即改这里。</p>
+  </div>
+  <div id="ads"></div>
+</aside>
+<main>
+  <div class="doc">
+    <div class="doc-head">
+      <h1>不用全做：这是一份按性价比排好的备选单</h1>
+      <p>挑走一两条就算数，剩下的放着，需要时再回来查。作者自己也没做到其中大部分。</p>
+      <p class="stat" id="head-stat"></p>
+    </div>
+    <div id="out"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+</main>
+<script>
+const COST_ENUMS={钱:["0","少","多"],时间:["少","中","多"],毅力:["否","些","是"],收益:["大","中","小"],口径:["时间","钱","职业","自由"]};
+const LENS_LABEL={时间:"时间与精力",钱:"金钱与保障",职业:"职业安全",自由:"人身自由与法律安全"};
+const COST_KEYS=["钱","时间","毅力"];
+// ratioOf 必须与 tools/lib/book.mjs 中的同名函数保持一致，改一处要改两处。
+function ratioOf(t){if(!t||!t.收益)return null;const zero=COST_KEYS.every(k=>k==="钱"?t[k]==="0":(t[k]==="少"||t[k]==="否"));const cheap=COST_KEYS.reduce((n,k)=>(t[k]==="中"||t[k]==="些"?n+1:n),0);if(t.收益==="大"&&zero)return"极高";if((t.收益==="大"&&cheap<=1)||(t.收益==="中"&&zero))return"高";return"一般";}
+const TAG_RE=/^<!--\s*成本标签:\s*(.*?)\s*-->$/;
+const ENTRY_RE=/^###\s+(\d+)\.\s+(.+)$/;
+const FIELD_RE=/^- \*\*(.+?)\*\*[:：]\s*(.*)$/;
+const BARE_RE=/^- (成本|说人话|收益|证据等级|来源|备注)[:：]\s*(.*)$/;
+const FIELDS=["成本","说人话","收益","证据等级","来源","备注"];
+
+function parseTag(line){const m=TAG_RE.exec(line.trim());if(!m)return null;const t={};for(const p of m[1].split(/\s+/).filter(Boolean)){const i=p.indexOf("=");if(i<0)continue;t[p.slice(0,i)]=p.slice(i+1);}return t;}
+
+// 与 tools/lib/book.mjs 的 pickIntro() 同算法：h1 后第一段正文（blockquote 或裸段落）。
+function pickIntro(lines,h1Idx){
+  for(const raw of lines.slice(h1Idx+1)){
+    const s=raw.trim();
+    if(!s)continue;
+    if(s.startsWith("#"))break;
+    if(s.startsWith(">"))return s.replace(/^>\s*/,"").trim();
+    if(s.startsWith("[")||s.startsWith("-")||s.startsWith("<!--"))continue;
+    return s;
+  }
+  return "";
+}
+
+function parseMd(text,file){
+  const lines=text.split(/\r?\n/);
+  const h1=lines.find(l=>l.startsWith("# "));
+  const title=h1?h1.slice(2).replace(/^\d+\.\s*/,"").trim():file;
+  const intro=pickIntro(lines,h1?lines.indexOf(h1):-1);
+  const out=[];let cur=null,last=null;
+  const close=()=>{if(cur)out.push(cur);cur=null;last=null;};
+  lines.forEach((raw,i)=>{
+    const line=raw.trimEnd();
+    const em=ENTRY_RE.exec(line.trim());
+    if(em){close();cur={number:+em[1],title:em[2].trim(),file,line:i+1,tags:null,raw:{}};return;}
+    if(!cur)return;
+    const tg=parseTag(line);if(tg){cur.tags=tg;return;}
+    const fm=FIELD_RE.exec(line.trim())||BARE_RE.exec(line.trim());
+    if(fm&&FIELDS.includes(fm[1])){last=fm[1];cur.raw[last]=fm[2].trim();return;}
+    if(last&&line.trim()&&!line.trim().startsWith("- ")){cur.raw[last]+="\n"+line.trim();}
+  });
+  close();
+  out.sort((a,b)=>a.number-b.number);
+  return{file,title,intro,entries:out.map(e=>({...e,ratio:ratioOf(e.tags),grade:(e.raw["证据等级"]||"").trim()[0]}))};
+}
+
+const EMBED = typeof window.__CORPUS__!=="undefined";
+
+// 站点配置与广告位全部来自 tools/site.json + tools/ads.json，在线模式下运行时抓取。
+// 换推广只改那两个 json，index.html 永不改动；离线单文件里两者由 window.__SITE__ 注入。
+const SITE = Object.assign(
+  { canonical: location.href.replace(/[^/]*$/,""), repo: "", release: "", license: "Unlicense，公有领域", longDocs: [], ads: [] },
+  window.__SITE__ || {}
+);
+async function loadSite(){
+  if(EMBED) return;
+  try{
+    const cfg=await (await fetch("tools/site.json")).json();
+    Object.assign(SITE,cfg.site);
+    SITE.longDocs=cfg.longDocs||[];
+    const ads=await (await fetch("tools/ads.json")).json();
+    SITE.ads=ads.slots||[];
+  }catch(e){
+    console.warn("tools/site.json / tools/ads.json 读取失败，侧栏推广与页脚长文留空",e);
+  }
+}
+
+// 在线模式：不维护硬编码文件清单，运行时从 README 的目录表解析 book/ 链接。
+// 这样新增一节只要写 book/NN-名.md 加 README 一行，index.html 永不改动。
+async function fileList(){
+  const r=await fetch("README.md");
+  if(!r.ok) throw new Error("README.md 读取失败 "+r.status);
+  const md=await r.text();
+  const hrefs=[...md.matchAll(/book\/(\d{2}-[^\s)\]]+\.md)/g)].map(m=>m[1]);
+  const uniq=[...new Set(hrefs)];
+  if(!uniq.length) throw new Error("README 目录里没解析到 book/NN-名.md，跑 node tools/sync-stats.mjs 生成");
+  return uniq.map(n=>"book/"+n);
+}
+
+async function load(){
+  if(EMBED) return window.__CORPUS__;
+  const files=await fileList();
+  const rs=await Promise.all(files.map(async f=>{
+    const r=await fetch(f);
+    if(!r.ok) throw new Error(f+" 读取失败 "+r.status);
+    return parseMd(await r.text(),f);
+  }));
+  return rs.sort((a,b)=>a.file.localeCompare(b.file));
+}
+
+const S={q:"",ch:"",钱:new Set(),时间:new Set(),毅力:new Set(),口径:new Set(),ratio:new Set(),grade:new Set(),dispute:false,todo:false};
+
+function seg(id,key,vals){
+  const el=document.getElementById(id);
+  el.innerHTML=vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join("");
+  el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const v=b.dataset.v;S[key].has(v)?S[key].delete(v):S[key].add(v);b.setAttribute("aria-pressed",S[key].has(v));render();});
+}
+function has(text,needle){return (text||"").indexOf(needle)>=0;}
+function match(e){
+  if(S.ch&&e.file!==S.ch)return false;
+  if(S.钱.size&&!S.钱.has(e.tags?.钱))return false;
+  if(S.时间.size&&!S.时间.has(e.tags?.时间))return false;
+  if(S.毅力.size&&!S.毅力.has(e.tags?.毅力))return false;
+  if(S.口径.size&&!S.口径.has(e.tags?.口径))return false;
+  if(S.ratio.size&&!S.ratio.has(e.ratio))return false;
+  if(S.grade.size&&!S.grade.has(e.grade))return false;
+  const blob=Object.values(e.raw).join(" ")+e.title;
+  if(S.dispute&&!has(blob,"争议"))return false;
+  if(S.todo&&!has(blob,"待核实"))return false;
+  if(S.q){const qs=S.q.split(/\s+/).filter(Boolean);if(!qs.every(x=>has(blob,x)))return false;}
+  return true;
+}
+function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function linkify(s,hereSec){
+  s=esc(s);
+  s=s.replace(/第\s*(\d+)\s*节\s*第\s*(\d+)\s*条(?:（[^）)]{1,26}）)?|第\s*(\d+)\s*条(?:（[^）)]{1,26}）)?/g,(m,crossSec,no,aSec,aNo)=>{
+    const sec=crossSec!==undefined?+crossSec:hereSec;
+    const n=crossSec!==undefined?+no:+aNo;
+    const t=byKey.get(sec+":"+n)??(sec===hereSec?byKey.get(n+""):undefined);
+    if(!t)return m;
+    // 只显示「第 N 节第 M 条」+ 解析出的真实标题：作者写的锚点若已漂移，渲染出的仍是目标当前标题。
+    const label=m.replace(/（[^）)]{1,26}）$/,"");
+    return `<button class="xref" data-ref="${sec}:${n}">${label}<span style="color:var(--t3);font-size:12px">（${esc(t.title)}）</span></button>`;
+  });
+  s=s.replace(/(https?:\/\/[^\s<）)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function chip(t,v,cls){return v?`<span class="chip ${cls||""}">${t}${v}</span>`:"";}
+
+function render(){
+  const out=document.getElementById("out");
+  let shown=0;const html=[];
+  for(const c of CORPUS){
+    const sec=Number(c.file.replace("book/","").slice(0,2))||0;
+    const es=c.entries.filter(match);
+    shown+=es.length;
+    if(!es.length)continue;
+    html.push(`<div class="sec-h"><h2>${esc(c.title)}</h2><span class="shown">${es.length} / ${c.entries.length} 条</span></div>`);
+    if(c.intro&&!S.q)html.push(`<p class="intro">${esc(c.intro)}</p>`);
+    for(const e of es){
+      const blob=Object.values(e.raw).join(" ");
+      const L=(x)=>linkify(x,sec);
+      html.push(`<article class="card" id="${e.file.replace(/\W/g,"")}-${e.number}">
+        <h3><span class="no">${e.number}.</span>${L(e.title)}</h3>
+        ${e.raw["说人话"]?`<p class="plain">${L(e.raw["说人话"])}</p>`:""}
+        <div class="chips">
+          ${chip("性价比 ",e.ratio,"ratio-"+e.ratio)}
+          ${chip("证据 ",e.grade,"g-"+e.grade)}
+          ${chip("花钱 ",e.tags?.钱)}${chip("时间 ",e.tags?.时间)}${chip("毅力 ",e.tags?.毅力)}
+          ${chip("换回 ",e.tags?LENS_LABEL[e.tags.口径]||e.tags.口径:"")}
+          ${has(blob,"争议")?'<span class="chip warn">有争议</span>':""}
+          ${has(blob,"待核实")?'<span class="chip warn">待核实</span>':""}
+        </div>
+        <details class="fine"><summary>成本 · 收益 · 来源 · 备注</summary>
+          <p><b>成本：</b>${L(e.raw["成本"])}</p>
+          <p><b>收益：</b>${L(e.raw["收益"])}</p>
+          <p><b>来源：</b>${L(e.raw["来源"])}</p>
+          <p><b>备注：</b>${L(e.raw["备注"])}</p>
+        </details>
+      </article>`);
+    }
+  }
+  out.innerHTML=shown?html.join(""):`<div class="empty">没有符合条件的条目。<br>试着少勾几个筛选项。</div>`;
+  document.getElementById("stat").textContent=shown+" 条";
+  document.getElementById("head-stat").textContent=`共 ${TOTAL} 条建议 · ${CORPUS.length} 节 · A 级 ${G.A} 条 · 性价比极高 ${R.极高} 条`;
+}
+
+function showPop(btn){
+  document.querySelector(".pop")?.remove();
+  const key=btn.dataset.ref;const [,no]=key.split(":");
+  const cur=CORPUS.find(c=>c.file===S.ch)||CORPUS[0];
+  const target=byKey.get(key)||cur?.entries.find(e=>String(e.number)===no);
+  if(!target)return;
+  const p=document.createElement("div");p.className="pop";
+  p.innerHTML=`<button class="close" aria-label="关闭">×</button><h3 style="font-size:15px;margin:0 0 8px">${esc(target.title)}</h3><p class="plain" style="margin:0 0 8px">${esc(target.raw["说人话"]||"")}</p><p style="margin:0;color:var(--t3);font-size:12.5px">来自 ${esc(target.file)}</p>`;
+  document.body.appendChild(p);
+  const r=btn.getBoundingClientRect();
+  p.style.left=Math.min(r.left,innerWidth-440)+"px";
+  p.style.top=(r.bottom+8)+"px";
+  p.querySelector(".close").onclick=()=>p.remove();
+}
+
+let CORPUS=[],byKey=new Map(),TOTAL=0,G={A:0,B:0,C:0},R={极高:0,高:0,一般:0};
+async function init(){
+  const [corpus]=await Promise.all([load(),loadSite()]);
+  CORPUS=corpus;
+  TOTAL=CORPUS.reduce((n,c)=>n+c.entries.length,0);
+  for(const c of CORPUS)for(const e of c.entries){
+    const sec=Number(c.file.replace("book/","").slice(0,2))||0;
+    byKey.set(sec+":"+e.number,e);
+    if(!byKey.has(String(e.number)))byKey.set(String(e.number),e);
+    if(e.grade)G[e.grade]=(G[e.grade]||0)+1;
+    if(e.ratio)R[e.ratio]=(R[e.ratio]||0)+1;
+  }
+  const sel=document.getElementById("f-ch");
+  sel.innerHTML=`<option value="">全部（${TOTAL} 条）</option>`+CORPUS.map(c=>`<option value="${c.file}">${esc(c.title)}（${c.entries.length}）</option>`).join("");
+  sel.onchange=()=>{S.ch=sel.value;render();};
+  seg("f-money","钱",COST_ENUMS.钱);seg("f-time","时间",COST_ENUMS.时间);seg("f-grit","毅力",COST_ENUMS.毅力);
+  seg("f-lens","口径",COST_ENUMS.口径.map(v=>v));seg("f-ratio","ratio",["极高","高","一般"]);seg("f-grade","grade",["A","B","C"]);
+  document.getElementById("f-q").oninput=e=>{S.q=e.target.value.trim();render();};
+  document.getElementById("f-dispute").onchange=e=>{S.dispute=e.target.checked;render();};
+  document.getElementById("f-todo").onchange=e=>{S.todo=e.target.checked;render();};
+  document.getElementById("reset").onclick=()=>{S.q="";S.ch="";["钱","时间","毅力","口径","ratio","grade"].forEach(k=>S[k].clear());S.dispute=S.todo=false;
+    document.getElementById("f-q").value="";document.getElementById("f-ch").value="";document.getElementById("f-dispute").checked=false;document.getElementById("f-todo").checked=false;
+    document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed","false"));
+    render();};
+  document.getElementById("nav-repo").href=SITE.repo;
+  document.getElementById("nav-dl").href=SITE.release;
+  document.getElementById("ads").innerHTML=(SITE.ads||[]).map(a=>`<div class="group ad"><p class="gt">${esc(a.label||"推广")} · ${esc(a.title)}</p><a href="${esc(a.href)}" target="_blank" rel="noopener"><img src="${esc(a.src)}" alt="${esc(a.alt||a.title)}" width="624" height="312" onerror="this.closest('.ad').style.display='none'"></a></div>`).join("");
+  const extra=(SITE.longDocs||[]).length?`长文：${SITE.longDocs.map(d=>`<a href="${esc(d.href)}">${esc(d.text)}</a>`).join(" · ")}。`:"";
+  document.getElementById("foot").innerHTML=`数字口径以条目内标注为准：时间与金钱不换算，见前言四种资源。${extra}来源核实过程见 <a href="${SITE.repo}/tree/main/docs">docs/</a>。正文每天都在改，以在线版为准：<a href="${SITE.canonical}">${SITE.canonical.replace(/^https?:\/\//,"")}</a>。${esc("Unlicense，公有领域")}。`;
+  document.body.addEventListener("click",e=>{const b=e.target.closest(".xref");if(b)showPop(b);});
+  document.getElementById("toggle-side").onclick=()=>document.body.classList.toggle("open");
+  document.getElementById("backdrop").onclick=()=>document.body.classList.remove("open");
+  const q0=new URLSearchParams(location.search).get("q");
+  if(q0){S.q=q0;document.getElementById("f-q").value=q0;}
+  render();
+}
+init().catch(err=>{
+  document.getElementById("out").innerHTML=`<div class=empty>加载失败：${String(err&&err.message||err)}<br>正文需要经 http 打开，双击本地文件会被浏览器拦下——那种场景请用离线单文件版。</div>`;
+  console.error(err);
+});
+</script>
+</body>
+</html>
