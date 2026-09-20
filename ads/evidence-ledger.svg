@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 624 312" width="624" height="312" role="img" aria-label="来源核实记录：每条数字是从哪个页面抄下来的">
+  <rect width="624" height="312" rx="18" fill="#eef4f0"/>
+  <rect x="20" y="20" width="584" height="272" rx="14" fill="#ffffff" stroke="#cfe0d6"/>
+  <text x="44" y="76" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif" font-size="15" fill="#8a9a90" letter-spacing="2">这本指南的账本</text>
+  <text x="44" y="140" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif" font-size="40" font-weight="700" fill="#1f3d2e">来源核实记录</text>
+  <text x="44" y="190" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif" font-size="23" fill="#2f6f4e">每个数字来自哪个页面、</text>
+  <text x="44" y="224" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif" font-size="23" fill="#2f6f4e">哪一天抓的、原句长什么样</text>
+  <text x="44" y="266" font-family="PingFang SC,Hiragino Sans GB,Microsoft YaHei,sans-serif" font-size="17" fill="#7b8a80">核不到的都写着「待核实」，没有一条凭记忆</text>
+</svg>

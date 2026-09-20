@@ -1,19 +1,32 @@
 {
-  "_说明": "侧栏底部广告位。换推广只改这个文件，不动 index.html。图按 2:1 出图放 ads/（svg 或 webp 均可），或改 src 为外链。当前两张是示例创意，换成真图即生效。离线单文件构建会把图内联成 data URI，并把外部链接换成在线版直链——转出去的 PDF/HTML 仍然能把人带回站点。",
+  "_说明": "侧栏底部广告位。换推广只改这个文件，不动 index.html。图按 2:1 出图放 ads/（svg 或 webp 均可），或改 src 为外链。离线单文件构建会把图内联成 data URI，并把外部链接换成在线版直链——转出去的 PDF/HTML 仍然能把人带回站点。",
+  "_铁律": "href 必须是**当下真的能点开**的地址。`example.com`、`TODO`、空值会被 `tools/offline/build.mjs` 直接判构建失败——这本指南卖的信用经不起一个死链，宁可空着。",
+  "_待补": {
+    "$说明": "下面两个槽位等作者给真实产品地址，给了就把整条搬回 slots、把 _铁律 之外的占位删掉。创意图已经在 ads/ 里，不用再画。",
+    "slots": [
+      {
+        "label": "推广",
+        "title": "论文站",
+        "src": "ads/paper-site.svg",
+        "href": "（待作者提供：论文站线上地址）",
+        "alt": "论文站：从 arXiv 正文里把数字和方法抠出来"
+      },
+      {
+        "label": "推广",
+        "title": "AI 学习营",
+        "src": "ads/ai-camp.svg",
+        "href": "（待作者提供：AI 学习营报名入口）",
+        "alt": "AI 学习营"
+      }
+    ]
+  },
   "slots": [
     {
-      "label": "推广",
-      "title": "论文站",
-      "src": "ads/paper-site.svg",
-      "href": "https://example.com/paper-site",
-      "alt": "论文站：从 arXiv 正文里把数字和方法抠出来"
-    },
-    {
-      "label": "推广",
-      "title": "AI 学习营",
-      "src": "ads/ai-camp.svg",
-      "href": "https://example.com/ai-camp",
-      "alt": "AI 学习营"
+      "label": "账本",
+      "title": "来源核实记录",
+      "src": "ads/evidence-ledger.svg",
+      "href": "https://github.com/gengyueworks/ai-work-guide/blob/main/docs/%E6%9D%A5%E6%BA%90%E6%A0%B8%E5%AE%9E%E8%AE%B0%E5%BD%95.md",
+      "alt": "来源核实记录：每个数字来自哪个页面、哪一天抓的、原句长什么样"
     }
   ]
 }

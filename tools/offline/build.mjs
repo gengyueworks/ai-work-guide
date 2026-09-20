@@ -41,6 +41,14 @@ const conf = JSON.parse(await readFile(ROOT + "/tools/site.json", "utf8"));
 const adsFile = JSON.parse(await readFile(ROOT + "/tools/ads.json", "utf8"));
 const site = { ...conf.site, longDocs: conf.longDocs ?? [], ads: adsFile.slots ?? [] };
 
+// 广告位是全站唯一会指向仓库外部的地方，占位地址点出去就是 404。
+// 和 longDocs 一样：宁可构建失败，也不把死链转发出去。
+for (const a of site.ads) {
+  if (!a.href || /example\.(com|org)|待(作者)?提供|TODO/i.test(a.href)) {
+    throw new Error(`ads.json 槽位「${a.title ?? a.src}」的 href 仍是占位（${a.href}）：填真链接，或整条移进 _待补`);
+  }
+}
+
 site.commit = process.env.GIT_SHA ?? "local";
 site.ads = await Promise.all(
   site.ads.map(async (a) => {
