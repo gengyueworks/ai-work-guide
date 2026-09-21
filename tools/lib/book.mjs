@@ -18,6 +18,8 @@ export const FIELD_ORDER = ["成本", "说人话", "收益", "证据等级", "�
 
 // 「这条有没核到的东西」在正文里有三种写法，只认「待核实」会把法律类条目的坦白漏掉、把数字算小。
 export const TODO_RE = /待核实|未核到|未取到/;
+// 争议必须显式标：条文名里就有「劳动争议调解仲裁法」，按「争议」两个字数会把法条标题全算成争议条目。
+export const DISPUTE_RE = /【争议】/;
 
 const TAG_RE = /^<!--\s*成本标签:\s*(.*?)\s*-->$/;
 const ENTRY_RE = /^###\s+(\d+)\.\s+(.+)$/;
@@ -258,7 +260,7 @@ export function countStats(corpus) {
     const g = (e.raw["证据等级"] || "").trim()[0];
     if (g in s) s[g] += 1;
     const blob = Object.values(e.raw).join(" ");
-    if (blob.includes("争议")) s.争议 += 1;
+    if (DISPUTE_RE.test(blob)) s.争议 += 1;
     if (TODO_RE.test(blob)) s.待核实 += 1;
     if (e.ratio) s[e.ratio] += 1;
     s.链接 += (blob.match(/https?:\/\/\S+/g) || []).length;

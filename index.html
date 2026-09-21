@@ -219,6 +219,8 @@ const LENS_LABEL={时间:"时间与精力",钱:"金钱与保障",职业:"职业�
 const COST_KEYS=["钱","时间","毅力"];
 // 与 tools/lib/book.mjs 的 TODO_RE 保持一致：三种坦白写法都算「有未核实事项」。
 const TODO_RE=/待核实|未核到|未取到/;
+// 与 tools/lib/book.mjs 的 DISPUTE_RE 保持一致：争议只认显式标记，否则《劳动争议调解仲裁法》这种法条名会被算成争议条目。
+const DISPUTE_RE=/【争议】/;
 // ratioOf 必须与 tools/lib/book.mjs 中的同名函数保持一致，改一处要改两处。
 function ratioOf(t){if(!t||!t.收益)return null;const zero=COST_KEYS.every(k=>k==="钱"?t[k]==="0":(t[k]==="少"||t[k]==="否"));const cheap=COST_KEYS.reduce((n,k)=>(t[k]==="中"||t[k]==="些"?n+1:n),0);if(t.收益==="大"&&zero)return"极高";if((t.收益==="大"&&cheap<=1)||(t.收益==="中"&&zero))return"高";return"一般";}
 const TAG_RE=/^<!--\s*成本标签:\s*(.*?)\s*-->$/;
@@ -326,7 +328,7 @@ function match(e){
   if(S.ratio.size&&!S.ratio.has(e.ratio))return false;
   if(S.grade.size&&!S.grade.has(e.grade))return false;
   const blob=Object.values(e.raw).join(" ")+e.title;
-  if(S.dispute&&!has(blob,"争议"))return false;
+  if(S.dispute&&!DISPUTE_RE.test(blob))return false;
   if(S.todo&&!TODO_RE.test(blob))return false;
   if(S.q){const qs=S.q.split(/\s+/).filter(Boolean);if(!qs.every(x=>has(blob,x)))return false;}
   return true;
@@ -406,7 +408,7 @@ function render(){
           ${src?`<a class="chip src" href="${esc(trimURL(src[0]))}" target="_blank" rel="noopener" title="直接看原始出处">出处 ↗</a>`:""}
           ${chip("花钱 ",e.tags?.钱)}${chip("时间 ",e.tags?.时间)}${chip("毅力 ",e.tags?.毅力)}
           ${chip("换回 ",e.tags?LENS_LABEL[e.tags.口径]||e.tags.口径:"")}
-          ${has(blob,"争议")?'<span class="chip warn">有争议</span>':""}
+          ${DISPUTE_RE.test(blob)?'<span class="chip warn">有争议</span>':""}
           ${TODO_RE.test(blob)?'<span class="chip warn">待核实</span>':""}
           <span class="acts">
             <button type="button" class="act" data-act="copy" data-e="${sec}:${e.number}" aria-label="复制${who}">复制这一条</button>
