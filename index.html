@@ -191,6 +191,7 @@ details.fine b{color:var(--t2);font-weight:600}
     <p>同一组多选是「或」，不同组之间是「且」。</p>
     <p>每节内按性价比从高到低排，检索不改变顺序。</p>
     <p>每条标签行最右的「复制这一条」会连出处和固定链接一起复制，粘到备忘录里就是可回看的一条。</p>
+    <p>「证据」说的是这一条的出处硬到什么程度。<b>A</b> 表示我对着法条或论文原文逐字核过，链接点开就是那段话。<b>B</b> 表示出处是有的，但还不够格当 A：要么只有别人整理转述的版本，要么原文读到了、可研究本身没有同行评审的去向、或者只给了方向没给量级。<b>C</b> 表示这是我自己的经验和判断，给不出出处。</p>
     <p>正文与标签来自仓库 <a href="book/">book/</a> 下的文件，改正文即改这里。</p>
   </div>
   <div id="ads"></div>
@@ -216,6 +217,8 @@ const COST_ENUMS={钱:["0","少","多"],时间:["少","中","多"],毅力:["否"
 const PRINT=window.__PRINT__===true;
 addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
 const LENS_LABEL={时间:"时间与精力",钱:"金钱与保障",职业:"职业安全",自由:"人身自由与法律安全"};
+// 光写一个字母读者不知道指什么，界面上统一带一句人话；字母本身留着当筛选键。
+const GRADE_WORD={A:"有原文",B:"出处不够硬",C:"作者判断"};
 const COST_KEYS=["钱","时间","毅力"];
 // 与 tools/lib/book.mjs 的 TODO_RE 保持一致：三种坦白写法都算「有未核实事项」。
 const TODO_RE=/待核实|未核到|未取到/;
@@ -312,9 +315,9 @@ async function load(){
 
 const S={q:"",ch:"",适合:new Set(),钱:new Set(),时间:new Set(),毅力:new Set(),口径:new Set(),ratio:new Set(),grade:new Set(),dispute:false,todo:false};
 
-function seg(id,key,vals){
+function seg(id,key,vals,labels){
   const el=document.getElementById(id);
-  el.innerHTML=vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join("");
+  el.innerHTML=vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${labels&&labels[v]?labels[v]:v}</button>`).join("");
   el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const v=b.dataset.v;S[key].has(v)?S[key].delete(v):S[key].add(v);afterFilter();});
 }
 function has(text,needle){return (text||"").indexOf(needle)>=0;}
@@ -379,7 +382,7 @@ function shareOf(e){
 }
 function attrib(e,sec){
   return `——《${SITE.name}》第 ${sec} 节「${CH[sec]||""}」第 ${e.number} 条 · `+
-    ["证据 "+(e.grade||""),e.ratio?"性价比 "+e.ratio:"",e.tags?.口径?"换回"+LENS_LABEL[e.tags.口径]:""].filter(Boolean).join(" · ");
+    ["证据 "+(e.grade?e.grade+" "+GRADE_WORD[e.grade]:""),e.ratio?"性价比 "+e.ratio:"",e.tags?.口径?"换回"+LENS_LABEL[e.tags.口径]:""].filter(Boolean).join(" · ");
 }
 
 function render(){
@@ -404,7 +407,7 @@ function render(){
         <div class="chips">
           ${(e.tags?.适合||[]).length?`<span class="chip">写给</span>`+e.tags.适合.map(r=>`<button type="button" class="chip role" data-role="${esc(r)}" aria-pressed="${S.适合.has(r)}" title="只看写给「${esc(r)}」的条目">${esc(r)}</button>`).join(""):""}
           ${chip("性价比 ",e.ratio,"ratio-"+e.ratio)}
-          ${chip("证据 ",e.grade,"g-"+e.grade)}
+          ${chip("证据 ",e.grade?e.grade+" "+GRADE_WORD[e.grade]:"","g-"+e.grade)}
           ${src?`<a class="chip src" href="${esc(trimURL(src[0]))}" target="_blank" rel="noopener" title="直接看原始出处">出处 ↗</a>`:""}
           ${chip("花钱 ",e.tags?.钱)}${chip("时间 ",e.tags?.时间)}${chip("毅力 ",e.tags?.毅力)}
           ${chip("换回 ",e.tags?LENS_LABEL[e.tags.口径]||e.tags.口径:"")}
@@ -426,7 +429,7 @@ function render(){
   }
   out.innerHTML=shown?html.join(""):`<div class="empty">没有符合条件的条目。<br>试着少勾几个筛选项。</div>`;
   document.getElementById("stat").textContent=shown+" 条";
-  document.getElementById("head-stat").textContent=`共 ${TOTAL} 条建议 · ${CORPUS.length} 节 · A 级 ${G.A} 条 · 性价比极高 ${R.极高} 条`;
+  document.getElementById("head-stat").textContent=`共 ${TOTAL} 条建议 · ${CORPUS.length} 节 · 出处能点开原文的 ${G.A} 条 · 性价比极高 ${R.极高} 条`;
 }
 
 const SET_KEYS=["适合","钱","时间","毅力","口径","ratio","grade"];
@@ -567,7 +570,7 @@ async function init(){
   sel.innerHTML=`<option value="">全部（${TOTAL} 条）</option>`+CORPUS.map(c=>`<option value="${c.file}">${esc(c.title)}（${c.entries.length}）</option>`).join("");
   sel.onchange=()=>{S.ch=sel.value;afterFilter();};
   seg("f-money","钱",COST_ENUMS.钱);seg("f-time","时间",COST_ENUMS.时间);seg("f-grit","毅力",COST_ENUMS.毅力);
-  seg("f-lens","口径",COST_ENUMS.口径.map(v=>v));seg("f-ratio","ratio",["极高","高","一般"]);seg("f-grade","grade",["A","B","C"]);
+  seg("f-lens","口径",COST_ENUMS.口径.map(v=>v));seg("f-ratio","ratio",["极高","高","一般"]);seg("f-grade","grade",["A","B","C"],{A:"A 有原文",B:"B 出处不够硬",C:"C 作者判断"});
   // 身份选项从正文里长出来：条目写了 适合= 才会出现，避免筛出一个 0 条的空身份。
   const roleCnt=new Map();
   for(const c of CORPUS)for(const e of c.entries)for(const r of e.tags?.适合||[])roleCnt.set(r,(roleCnt.get(r)||0)+1);
@@ -581,7 +584,7 @@ async function init(){
   document.getElementById("reset").onclick=()=>{clearFilters();afterFilter();};
   const best=CORPUS.reduce((n,c)=>n+c.entries.filter(e=>e.grade==="A"&&e.ratio==="极高").length,0);
   const pb=document.getElementById("preset-best");
-  pb.textContent=best?`先看这 ${best} 条：A 级证据 + 性价比极高`:"";
+  pb.textContent=best?`先看这 ${best} 条：出处能点开原文，性价比又最高`:"";
   if(best)pb.onclick=()=>{clearFilters();S.grade.add("A");S.ratio.add("极高");afterFilter();};
   else pb.hidden=true;
   document.getElementById("preset-role").onclick=()=>{
