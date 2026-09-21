@@ -83,6 +83,7 @@ a.chip.src:hover{background:var(--brand-2)}
 .act:hover{border-color:var(--brand-1);color:var(--brand-1)}
 @keyframes flash{0%{border-color:var(--brand-1);background:var(--brand-2)}70%{border-color:var(--brand-1);background:var(--brand-2)}100%{background:var(--bg-elv)}}
 .card.flash{animation:flash 2s ease-out 1}
+@media(prefers-reduced-motion:reduce){.card.flash{animation:none;border-color:var(--brand-1);box-shadow:0 0 0 3px var(--brand-2)}}
 .quick{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
 .pill{font:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--brand-1);border-radius:20px;background:var(--brand-2);color:var(--brand-1);cursor:pointer}
 .pill:hover{text-decoration:underline}
@@ -393,8 +394,10 @@ function render(){
       const blob=Object.values(e.raw).join(" ")+" "+(e.tags?.适合||[]).join(" ");
       const L=(x)=>linkify(x,sec);
       const src=URL_T.exec(unwrap(e.raw["来源"]||""));
+      const at=`第 ${sec} 节第 ${e.number} 条`;
+      const who=`${at}（${esc(clip(e.title,30))}）`;
       html.push(`<article class="card" id="e-${sec}-${e.number}">
-        <h3><a class="no" href="#e-${sec}-${e.number}" title="这一条的固定链接">${e.number}.</a>${L(e.title)}</h3>
+        <h3><a class="no" href="#e-${sec}-${e.number}" title="这一条的固定链接" aria-label="${who} 的固定链接">${e.number}.</a>${L(e.title)}</h3>
         ${e.raw["说人话"]?`<p class="plain">${L(e.raw["说人话"])}</p>`:""}
         <div class="chips">
           ${(e.tags?.适合||[]).length?`<span class="chip">写给</span>`+e.tags.适合.map(r=>`<button type="button" class="chip role" data-role="${esc(r)}" aria-pressed="${S.适合.has(r)}" title="只看写给「${esc(r)}」的条目">${esc(r)}</button>`).join(""):""}
@@ -406,8 +409,8 @@ function render(){
           ${has(blob,"争议")?'<span class="chip warn">有争议</span>':""}
           ${TODO_RE.test(blob)?'<span class="chip warn">待核实</span>':""}
           <span class="acts">
-            <button type="button" class="act" data-act="copy" data-e="${sec}:${e.number}">复制这一条</button>
-            ${CAN_SHARE?`<button type="button" class="act" data-act="share" data-e="${sec}:${e.number}">分享</button>`:""}
+            <button type="button" class="act" data-act="copy" data-e="${sec}:${e.number}" aria-label="复制${who}">复制这一条</button>
+            ${CAN_SHARE?`<button type="button" class="act" data-act="share" data-e="${sec}:${e.number}" aria-label="分享${who}">分享</button>`:""}
           </span>
         </div>
         <details class="fine"${PRINT?" open":""}><summary>成本 · 收益 · 来源 · 备注</summary>
@@ -466,7 +469,7 @@ function afterFilter(skipUI){if(!skipUI)syncUI();render();syncURL();}
 let toastTimer;
 function toast(msg,err){
   let el=document.querySelector(".toast");
-  if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}
+  if(!el){el=document.createElement("div");el.className="toast";el.setAttribute("role","status");document.body.appendChild(el);}
   el.textContent=msg;el.classList.toggle("err",!!err);
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.remove(),2800);
 }
@@ -490,7 +493,7 @@ async function copyText(s,okMsg){
 function pickPop(s){
   document.querySelector(".pop")?.remove();
   const p=document.createElement("div");p.className="pop";
-  p.innerHTML=`<button class="close" aria-label="关闭">×</button><p style="margin:0 0 8px;color:var(--t3);font-size:12.5px">这个浏览器不让网页写剪贴板。下面这段已经替你选好，长按或 Ctrl+A 后拷贝即可。</p><textarea readonly style="width:100%;min-height:170px;font:12.5px/1.6 ui-monospace,Menlo,monospace;border:1px solid var(--divider);border-radius:8px;padding:8px"></textarea>`;
+  p.innerHTML=`<button class="close" aria-label="关闭">×</button><p style="margin:0 0 8px;color:var(--t3);font-size:12.5px">这个浏览器不让网页写剪贴板。下面这段已经替你选好，长按或 Ctrl+A 后拷贝即可。</p><textarea readonly aria-label="这一条的引用文本，已替你选好" style="width:100%;min-height:170px;font:12.5px/1.6 ui-monospace,Menlo,monospace;border:1px solid var(--divider);border-radius:8px;padding:8px"></textarea>`;
   document.body.appendChild(p);
   const ta=p.querySelector("textarea");ta.value=s;ta.focus();ta.select();
   p.querySelector(".close").onclick=()=>p.remove();
