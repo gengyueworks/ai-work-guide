@@ -23,7 +23,9 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--t1);font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
-a{color:var(--brand-1)}
+a{color:var(--brand-1);overflow-wrap:anywhere}
+/* 来源里的 gov.cn / arXiv 长链接有 500px 以上，不强制断词会把卡片撑破。 */
+p,li,h3{overflow-wrap:anywhere}
 nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);display:flex;align-items:center;gap:12px;padding:0 20px;background:var(--bg-elv);border-bottom:1px solid var(--divider);z-index:20}
 nav .brand{font-weight:700;letter-spacing:-.01em}
 nav .stat{font-size:13px;color:var(--t3)}
@@ -58,9 +60,11 @@ main{padding:calc(var(--nav-h) + 32px) 24px 96px calc(var(--side-w) + 24px)}
 .sec-h .shown{margin-left:auto;font-size:12.5px;color:var(--t3);font-variant-numeric:tabular-nums}
 .intro{color:var(--t2);font-size:13.5px;max-width:74ch;margin:0 0 14px}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:#f2f3f5;border:1px solid var(--divider);border-radius:4px;padding:0 4px}
-.card{background:var(--bg-elv);border:1px solid var(--divider);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.card{background:var(--bg-elv);border:1px solid var(--divider);border-radius:12px;padding:16px 18px;margin-bottom:12px;scroll-margin-top:calc(var(--nav-h) + 18px)}
 .card h3{font-size:16.5px;margin:0 0 10px;line-height:1.5;font-weight:600}
 .card h3 .no{color:var(--t3);font-weight:500;font-variant-numeric:tabular-nums;margin-right:6px}
+.card h3 a.no{text-decoration:none}
+.card h3 a.no:hover{color:var(--brand-1);text-decoration:underline}
 .plain{font-size:16px;line-height:1.75;color:var(--t1);background:var(--brand-2);border-radius:9px;padding:10px 12px;margin:0 0 12px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .chip{font-size:11.5px;padding:2px 8px;border-radius:20px;border:1px solid var(--divider);color:var(--t3)}
@@ -69,6 +73,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 .chip.g-A{color:var(--a);border-color:var(--a)}
 .chip.g-B{color:var(--b);border-color:var(--b)}
 .chip.warn{color:#a4441f;border-color:#e0b8a8}
+/* 身份徽章做成按钮：读到「写给 运维」时最自然的下一步是「还有哪几条写给运维」，不该让人回侧栏找。 */
+button.chip{font:inherit;font-size:11.5px;cursor:pointer}
+button.chip.role:hover,button.chip.role[aria-pressed=true]{border-color:var(--brand-1);box-shadow:inset 0 0 0 1px var(--brand-1)}
+a.chip.src{color:var(--brand-1);border-color:var(--brand-1);text-decoration:none}
+a.chip.src:hover{background:var(--brand-2)}
+.acts{margin-left:auto;display:flex;gap:5px;align-self:center}
+.act{font:inherit;font-size:11.5px;line-height:1;padding:5px 9px;border:1px solid var(--divider);border-radius:20px;background:var(--bg-elv);color:var(--t2);cursor:pointer;white-space:nowrap}
+.act:hover{border-color:var(--brand-1);color:var(--brand-1)}
+@keyframes flash{0%{border-color:var(--brand-1);background:var(--brand-2)}70%{border-color:var(--brand-1);background:var(--brand-2)}100%{background:var(--bg-elv)}}
+.card.flash{animation:flash 2s ease-out 1}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+.pill{font:inherit;font-size:13px;padding:7px 14px;border:1px solid var(--brand-1);border-radius:20px;background:var(--brand-2);color:var(--brand-1);cursor:pointer}
+.pill:hover{text-decoration:underline}
+.toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:70;background:var(--t1);color:#fff;font-size:13px;padding:9px 16px;border-radius:20px;box-shadow:0 8px 26px rgba(0,0,0,.2)}
+.toast.err{background:#a4441f}
 details.fine{font-size:13px;color:var(--t2)}
 details.fine summary{cursor:pointer;color:var(--t3);font-size:12.5px}
 details.fine p{margin:6px 0}
@@ -91,7 +110,9 @@ details.fine b{color:var(--t2);font-weight:600}
 @media print{
   @page{size:A4;margin:15mm 14mm}
   body{background:#fff;font-size:10.5pt;line-height:1.62;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  nav,aside,.backdrop,.pop,.filter-btn,.sec-h .shown{display:none!important}
+  nav,aside,.backdrop,.pop,.filter-btn,.sec-h .shown,.acts,.quick,.toast{display:none!important}
+  /* 「出处 ↗」在纸上点不动，完整链接已经印在展开的来源行里。 */
+  a.chip.src{display:none!important}
   main{padding:0}
   .doc{max-width:none}
   .cover{display:block;border-bottom:2px solid var(--brand-1);padding-bottom:14pt;margin-bottom:16pt}
@@ -168,6 +189,7 @@ details.fine b{color:var(--t2);font-weight:600}
   <div class="hint">
     <p>同一组多选是「或」，不同组之间是「且」。</p>
     <p>每节内按性价比从高到低排，检索不改变顺序。</p>
+    <p>每条标签行最右的「复制这一条」会连出处和固定链接一起复制，粘到备忘录里就是可回看的一条。</p>
     <p>正文与标签来自仓库 <a href="book/">book/</a> 下的文件，改正文即改这里。</p>
   </div>
   <div id="ads"></div>
@@ -178,6 +200,10 @@ details.fine b{color:var(--t2);font-weight:600}
       <h1>不用全做：这是一份按性价比排好的备选单</h1>
       <p>挑走一两条就算数，剩下的放着，需要时再回来查。作者自己也没做到其中大部分。</p>
       <p class="stat" id="head-stat"></p>
+      <p class="quick">
+        <button type="button" class="pill" id="preset-best"></button>
+        <button type="button" class="pill" id="preset-role">先说我是哪一类人</button>
+      </p>
     </div>
     <div id="out"></div>
     <div class="foot" id="foot"></div>
@@ -242,7 +268,7 @@ const EMBED = typeof window.__CORPUS__!=="undefined";
 // 站点配置与广告位全部来自 tools/site.json + tools/ads.json，在线模式下运行时抓取。
 // 换推广只改那两个 json，index.html 永不改动；离线单文件里两者由 window.__SITE__ 注入。
 const SITE = Object.assign(
-  { canonical: location.href.replace(/[^/]*$/,""), repo: "", release: "", license: "Unlicense，公有领域", longDocs: [], ads: [] },
+  { name: document.title, canonical: location.href.replace(/[^/]*$/,""), repo: "", release: "", license: "Unlicense，公有领域", longDocs: [], ads: [] },
   window.__SITE__ || {}
 );
 async function loadSite(){
@@ -286,7 +312,7 @@ const S={q:"",ch:"",适合:new Set(),钱:new Set(),时间:new Set(),毅力:new S
 function seg(id,key,vals){
   const el=document.getElementById(id);
   el.innerHTML=vals.map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join("");
-  el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const v=b.dataset.v;S[key].has(v)?S[key].delete(v):S[key].add(v);b.setAttribute("aria-pressed",S[key].has(v));render();});
+  el.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const v=b.dataset.v;S[key].has(v)?S[key].delete(v):S[key].add(v);afterFilter();});
 }
 function has(text,needle){return (text||"").indexOf(needle)>=0;}
 function match(e){
@@ -305,8 +331,15 @@ function match(e){
   return true;
 }
 function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+// 正文里 72 条出处写成 markdown 自动链接 <https://…>，另外 8 条裸 URL 后面紧跟「」。
+// esc 先把尖括号变成 &lt;/&gt;，再按「非空白」切就会把「&gt;（访问日期）」整段吞进 href —— 出处链接全部点不开。
+// 所以：先在原文上拆掉 <> 包裹，再用排除中日韩标点的字符类切，最后去掉尾部英文标点。
+const URL_T=/https?:\/\/[^\s<>()（）〔】「」『』《》“”‘’"'，。；：、！？]+/;
+const URL_G=new RegExp(URL_T.source,"g");
+const unwrap=s=>(s||"").replace(/<((?:https?|ftp):\/\/[^<>\s]+)>/g,"$1");
+const trimURL=u=>u.replace(/[.,;:]+$/,"");
 function linkify(s,hereSec){
-  s=esc(s);
+  s=esc(unwrap(s));
   s=s.replace(/第\s*(\d+)\s*节\s*第\s*(\d+)\s*条(?:（[^）)]{1,26}）)?|第\s*(\d+)\s*条(?:（[^）)]{1,26}）)?/g,(m,crossSec,no,aSec,aNo)=>{
     const sec=crossSec!==undefined?+crossSec:hereSec;
     const n=crossSec!==undefined?+no:+aNo;
@@ -316,19 +349,41 @@ function linkify(s,hereSec){
     const label=m.replace(/（[^）)]{1,26}）$/,"");
     return `<button class="xref" data-ref="${sec}:${n}">${label}<span style="color:var(--t3);font-size:12px">（${esc(t.title)}）</span></button>`;
   });
-  s=s.replace(/(https?:\/\/[^\s<）)]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  s=s.replace(URL_G,u=>{const t=trimURL(u);return `<a href="${t}" target="_blank" rel="noopener">${t}</a>`;});
   // 正文里的 **强调** 与 `行内代码` 一直是原样吐星号的；esc 已跑过，这里只会新增标签，不会注入。
   s=s.replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>");
   s=s.replace(/`([^`\n]+)`/g,"<code>$1</code>");
   return s;
 }
 function chip(t,v,cls){return v?`<span class="chip ${cls||""}">${t}${v}</span>`:"";}
+const secOf=f=>Number(String(f).replace("book/","").slice(0,2))||0;
+const clean=s=>(s||"").replace(/\*\*/g,"").replace(/`/g,"").replace(/\s+/g," ").trim();
+function linkOf(e){return SITE.canonical.replace(/\/$/,"")+"/#e-"+secOf(e.file)+"-"+e.number;}
+// 复制出去的文本要单独站得住：粘进备忘录、微信、群里都看不出这是从筛选过的网页里抠出来的。
+function citeOf(e){
+  const sec=secOf(e.file);
+  return [clean(e.title),"",clean(e.raw["说人话"]),"",attrib(e,sec),
+    "来源："+clean(e.raw["来源"]),linkOf(e)].join("\n");
+}
+// 分享走系统面板，正文字数被各家截得很短；这里只留「一句标题 + 一句人话 + 回得来的链接」。
+// 截断要落在句末，否则粘进微信看到的是半句话。
+const clip=(s,n)=>{const t=clean(s);if(t.length<=n)return t;const head=t.slice(0,n);
+  const i=Math.max(head.lastIndexOf("。"),head.lastIndexOf("；"),head.lastIndexOf("！"),head.lastIndexOf("？"));
+  return (i>24?head.slice(0,i+1):head.replace(/[,，、:：;；]$/,""))+"…";};
+function shareOf(e){
+  const sec=secOf(e.file);
+  return [clean(e.title),clip(e.raw["说人话"],86),attrib(e,sec),linkOf(e)].join("\n");
+}
+function attrib(e,sec){
+  return `——《${SITE.name}》第 ${sec} 节「${CH[sec]||""}」第 ${e.number} 条 · `+
+    ["证据 "+(e.grade||""),e.ratio?"性价比 "+e.ratio:"",e.tags?.口径?"换回"+LENS_LABEL[e.tags.口径]:""].filter(Boolean).join(" · ");
+}
 
 function render(){
   const out=document.getElementById("out");
   let shown=0;const html=[];
   for(const c of CORPUS){
-    const sec=Number(c.file.replace("book/","").slice(0,2))||0;
+    const sec=secOf(c.file);
     const es=c.entries.filter(match);
     shown+=es.length;
     if(!es.length)continue;
@@ -337,17 +392,23 @@ function render(){
     for(const e of es){
       const blob=Object.values(e.raw).join(" ")+" "+(e.tags?.适合||[]).join(" ");
       const L=(x)=>linkify(x,sec);
-      html.push(`<article class="card" id="${e.file.replace(/\W/g,"")}-${e.number}">
-        <h3><span class="no">${e.number}.</span>${L(e.title)}</h3>
+      const src=URL_T.exec(unwrap(e.raw["来源"]||""));
+      html.push(`<article class="card" id="e-${sec}-${e.number}">
+        <h3><a class="no" href="#e-${sec}-${e.number}" title="这一条的固定链接">${e.number}.</a>${L(e.title)}</h3>
         ${e.raw["说人话"]?`<p class="plain">${L(e.raw["说人话"])}</p>`:""}
         <div class="chips">
-          ${(e.tags?.适合||[]).length?`<span class="chip role">写给 ${e.tags.适合.join(" · ")}</span>`:""}
+          ${(e.tags?.适合||[]).length?`<span class="chip">写给</span>`+e.tags.适合.map(r=>`<button type="button" class="chip role" data-role="${esc(r)}" aria-pressed="${S.适合.has(r)}" title="只看写给「${esc(r)}」的条目">${esc(r)}</button>`).join(""):""}
           ${chip("性价比 ",e.ratio,"ratio-"+e.ratio)}
           ${chip("证据 ",e.grade,"g-"+e.grade)}
+          ${src?`<a class="chip src" href="${esc(trimURL(src[0]))}" target="_blank" rel="noopener" title="直接看原始出处">出处 ↗</a>`:""}
           ${chip("花钱 ",e.tags?.钱)}${chip("时间 ",e.tags?.时间)}${chip("毅力 ",e.tags?.毅力)}
           ${chip("换回 ",e.tags?LENS_LABEL[e.tags.口径]||e.tags.口径:"")}
           ${has(blob,"争议")?'<span class="chip warn">有争议</span>':""}
           ${TODO_RE.test(blob)?'<span class="chip warn">待核实</span>':""}
+          <span class="acts">
+            <button type="button" class="act" data-act="copy" data-e="${sec}:${e.number}">复制这一条</button>
+            ${CAN_SHARE?`<button type="button" class="act" data-act="share" data-e="${sec}:${e.number}">分享</button>`:""}
+          </span>
         </div>
         <details class="fine"${PRINT?" open":""}><summary>成本 · 收益 · 来源 · 备注</summary>
           <p><b>成本：</b>${L(e.raw["成本"])}</p>
@@ -361,6 +422,106 @@ function render(){
   out.innerHTML=shown?html.join(""):`<div class="empty">没有符合条件的条目。<br>试着少勾几个筛选项。</div>`;
   document.getElementById("stat").textContent=shown+" 条";
   document.getElementById("head-stat").textContent=`共 ${TOTAL} 条建议 · ${CORPUS.length} 节 · A 级 ${G.A} 条 · 性价比极高 ${R.极高} 条`;
+}
+
+const SET_KEYS=["适合","钱","时间","毅力","口径","ratio","grade"];
+const SEG_KEY={"f-role":"适合","f-money":"钱","f-time":"时间","f-grit":"毅力","f-lens":"口径","f-ratio":"ratio","f-grade":"grade"};
+const QP={适合:"role",钱:"m",时间:"t",毅力:"y",口径:"k",ratio:"r",grade:"g"};
+function clearFilters(){S.q="";S.ch="";S.dispute=S.todo=false;SET_KEYS.forEach(k=>S[k].clear());}
+// 筛选状态同步进地址栏：读者按 Ctrl/Cmd+D 收藏下来的是「A 级 + 极高」这个视图，不是一小时后啥也没筛的首页。
+function syncURL(){
+  if(EMBED)return;
+  const p=new URLSearchParams();
+  if(S.q)p.set("q",S.q);
+  if(S.ch)p.set("c",String(secOf(S.ch)));
+  for(const k of SET_KEYS)if(S[k].size)p.set(QP[k],[...S[k]].join(","));
+  if(S.dispute)p.set("d","1");
+  if(S.todo)p.set("w","1");
+  // 这里刻意丢掉 hash：改筛选意味着读者已经在浏览，转发的定位锚就该失效。
+  history.replaceState(null,"",location.pathname+(p.size?"?"+p:""));
+}
+function readURL(){
+  const p=new URLSearchParams(location.search);
+  if(p.get("q"))S.q=p.get("q");
+  const c=p.get("c");
+  if(c)S.ch=FILE_BY_SEC.get(String(+c).padStart(2,"0"))||"";
+  for(const k of SET_KEYS)(p.get(QP[k])||"").split(",").filter(Boolean).forEach(v=>S[k].add(v));
+  S.dispute=p.get("d")==="1";
+  S.todo=p.get("w")==="1";
+}
+function syncUI(){
+  document.getElementById("f-q").value=S.q;
+  document.getElementById("f-ch").value=S.ch;
+  for(const id in SEG_KEY){
+    const sg=document.getElementById(id);if(!sg)continue;
+    const set=S[SEG_KEY[id]];
+    sg.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(set.has(b.dataset.v))));
+  }
+  document.getElementById("f-dispute").checked=S.dispute;
+  document.getElementById("f-todo").checked=S.todo;
+}
+// skipUI：搜索框打字时别回写 input.value，那会把光标弹到末尾。
+function afterFilter(skipUI){if(!skipUI)syncUI();render();syncURL();}
+
+let toastTimer;
+function toast(msg,err){
+  let el=document.querySelector(".toast");
+  if(!el){el=document.createElement("div");el.className="toast";document.body.appendChild(el);}
+  el.textContent=msg;el.classList.toggle("err",!!err);
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.remove(),2800);
+}
+// 离线单文件常被双击打开（file://），非安全上下文里 navigator.clipboard 直接不存在；
+// 而且 writeText 在没授权的浏览器里可能一直挂着不 reject，那样读者点了按钮什么也不会发生。
+// 所以给它 1.2 秒的期限，超时就走降级路径；execCommand 也失败时把文本摊在可选中输入框里让读者长按全选。
+const withDeadline=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(rej,ms))]);
+async function copyText(s,okMsg){
+  let done=false;
+  try{await withDeadline(navigator.clipboard.writeText(s),1200);done=true;}catch(_){}
+  if(!done){
+    const ta=document.createElement("textarea");
+    ta.value=s;ta.style.cssText="position:fixed;top:-2000px";
+    document.body.appendChild(ta);ta.select();
+    try{done=document.execCommand("copy");}catch(_){}
+    ta.remove();
+  }
+  done?toast(okMsg):pickPop(s);
+  return done;
+}
+function pickPop(s){
+  document.querySelector(".pop")?.remove();
+  const p=document.createElement("div");p.className="pop";
+  p.innerHTML=`<button class="close" aria-label="关闭">×</button><p style="margin:0 0 8px;color:var(--t3);font-size:12.5px">这个浏览器不让网页写剪贴板。下面这段已经替你选好，长按或 Ctrl+A 后拷贝即可。</p><textarea readonly style="width:100%;min-height:170px;font:12.5px/1.6 ui-monospace,Menlo,monospace;border:1px solid var(--divider);border-radius:8px;padding:8px"></textarea>`;
+  document.body.appendChild(p);
+  const ta=p.querySelector("textarea");ta.value=s;ta.focus();ta.select();
+  p.querySelector(".close").onclick=()=>p.remove();
+  toast("剪贴板被浏览器拦下了，请手动复制",true);
+}
+async function shareOrCopy(e){
+  if(navigator.share){
+    try{await navigator.share({title:clean(e.title),text:shareOf(e),url:linkOf(e)});return;}
+    catch(err){if(err&&err.name==="AbortError")return;}
+  }
+  copyText(citeOf(e),"这一条已复制，连出处和链接一起带走了");
+}
+
+const refOf=s=>{const m=/^#?e-(\d+)-(\d+)$/.exec(s||"");return m?[+m[1],+m[2]]:[];};
+function hashRef(){return refOf(location.hash);}
+function setTitle(sec,no){
+  const e=sec?byKey.get(sec+":"+no):null;
+  document.title=e?clean(e.title)+"｜"+BASE_TITLE:BASE_TITLE;
+  const d=document.querySelector('meta[name="description"]');
+  if(d)d.content=e?`${clean(e.title)}——${clip(e.raw["说人话"],110)}（${BASE_TITLE} 第 ${sec} 节第 ${no} 条）`:BASE_DESC;
+}
+// 转发出去的链接落地时必须「一眼就是那一条」：清掉筛选、只留这一节给出上下文，再滚过去闪一下。
+function applyHash(){
+  const [sec,no]=hashRef()||[];
+  const e=sec?byKey.get(sec+":"+no):null;
+  if(!e){setTitle();return false;}
+  clearFilters();S.ch=e.file;
+  syncUI();render();setTitle(sec,no);
+  const el=document.getElementById(`e-${sec}-${no}`);
+  if(el){el.classList.add("flash");el.scrollIntoView({block:"center"});}
+  return true;
 }
 
 function showPop(btn){
@@ -378,21 +539,28 @@ function showPop(btn){
   p.querySelector(".close").onclick=()=>p.remove();
 }
 
-let CORPUS=[],byKey=new Map(),TOTAL=0,G={A:0,B:0,C:0},R={极高:0,高:0,一般:0};
+let CORPUS=[],byKey=new Map(),TOTAL=0,G={A:0,B:0,C:0},R={极高:0,高:0,一般:0},CH={},FILE_BY_SEC=new Map();
+const CAN_SHARE=typeof navigator.share==="function";
+const BASE_TITLE=document.title;
+const BASE_DESC=document.querySelector('meta[name="description"]').content;
 async function init(){
   const [corpus]=await Promise.all([load(),loadSite()]);
   CORPUS=corpus;
   TOTAL=CORPUS.reduce((n,c)=>n+c.entries.length,0);
-  for(const c of CORPUS)for(const e of c.entries){
-    const sec=Number(c.file.replace("book/","").slice(0,2))||0;
-    byKey.set(sec+":"+e.number,e);
-    if(!byKey.has(String(e.number)))byKey.set(String(e.number),e);
-    if(e.grade)G[e.grade]=(G[e.grade]||0)+1;
-    if(e.ratio)R[e.ratio]=(R[e.ratio]||0)+1;
+  for(const c of CORPUS){
+    const sec=secOf(c.file);
+    CH[sec]=c.title;
+    FILE_BY_SEC.set(String(sec).padStart(2,"0"),c.file);
+    for(const e of c.entries){
+      byKey.set(sec+":"+e.number,e);
+      if(!byKey.has(String(e.number)))byKey.set(String(e.number),e);
+      if(e.grade)G[e.grade]=(G[e.grade]||0)+1;
+      if(e.ratio)R[e.ratio]=(R[e.ratio]||0)+1;
+    }
   }
   const sel=document.getElementById("f-ch");
   sel.innerHTML=`<option value="">全部（${TOTAL} 条）</option>`+CORPUS.map(c=>`<option value="${c.file}">${esc(c.title)}（${c.entries.length}）</option>`).join("");
-  sel.onchange=()=>{S.ch=sel.value;render();};
+  sel.onchange=()=>{S.ch=sel.value;afterFilter();};
   seg("f-money","钱",COST_ENUMS.钱);seg("f-time","时间",COST_ENUMS.时间);seg("f-grit","毅力",COST_ENUMS.毅力);
   seg("f-lens","口径",COST_ENUMS.口径.map(v=>v));seg("f-ratio","ratio",["极高","高","一般"]);seg("f-grade","grade",["A","B","C"]);
   // 身份选项从正文里长出来：条目写了 适合= 才会出现，避免筛出一个 0 条的空身份。
@@ -402,24 +570,42 @@ async function init(){
     document.getElementById("g-role").hidden=false;
     seg("f-role","适合",[...roleCnt.keys()].sort((a,b)=>roleCnt.get(b)-roleCnt.get(a)||a.localeCompare(b,"zh")));
   }
-  document.getElementById("f-q").oninput=e=>{S.q=e.target.value.trim();render();};
-  document.getElementById("f-dispute").onchange=e=>{S.dispute=e.target.checked;render();};
-  document.getElementById("f-todo").onchange=e=>{S.todo=e.target.checked;render();};
-  document.getElementById("reset").onclick=()=>{S.q="";S.ch="";["适合","钱","时间","毅力","口径","ratio","grade"].forEach(k=>S[k].clear());S.dispute=S.todo=false;
-    document.getElementById("f-q").value="";document.getElementById("f-ch").value="";document.getElementById("f-dispute").checked=false;document.getElementById("f-todo").checked=false;
-    document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed","false"));
-    render();};
+  document.getElementById("f-q").oninput=e=>{S.q=e.target.value.trim();afterFilter(true);};
+  document.getElementById("f-dispute").onchange=e=>{S.dispute=e.target.checked;afterFilter();};
+  document.getElementById("f-todo").onchange=e=>{S.todo=e.target.checked;afterFilter();};
+  document.getElementById("reset").onclick=()=>{clearFilters();afterFilter();};
+  const best=CORPUS.reduce((n,c)=>n+c.entries.filter(e=>e.grade==="A"&&e.ratio==="极高").length,0);
+  const pb=document.getElementById("preset-best");
+  pb.textContent=best?`先看这 ${best} 条：A 级证据 + 性价比极高`:"";
+  if(best)pb.onclick=()=>{clearFilters();S.grade.add("A");S.ratio.add("极高");afterFilter();};
+  else pb.hidden=true;
+  document.getElementById("preset-role").onclick=()=>{
+    document.body.classList.add("open");
+    const g=document.getElementById("g-role");
+    g.scrollIntoView({block:"center"});
+    g.querySelector("button")?.focus();
+  };
   document.getElementById("nav-repo").href=SITE.repo;
   document.getElementById("nav-dl").href=SITE.release;
   document.getElementById("ads").innerHTML=(SITE.ads||[]).map(a=>`<div class="group ad"><p class="gt">${esc(a.label||"推广")} · ${esc(a.title)}</p><a href="${esc(a.href)}" target="_blank" rel="noopener"><img src="${esc(a.src)}" alt="${esc(a.alt||a.title)}" width="624" height="312" onerror="this.closest('.ad').style.display='none'"></a></div>`).join("");
   const extra=(SITE.longDocs||[]).length?`长文：${SITE.longDocs.map(d=>`<a href="${esc(d.href)}">${esc(d.text)}</a>`).join(" · ")}。`:"";
   document.getElementById("foot").innerHTML=`数字口径以条目内标注为准：时间与金钱不换算，见前言四种资源。${extra}来源核实过程见 <a href="${SITE.repo}/tree/main/docs">docs/</a>。正文每天都在改，以在线版为准：<a href="${SITE.canonical}">${SITE.canonical.replace(/^https?:\/\//,"")}</a>。${esc("Unlicense，公有领域")}。`;
   document.body.addEventListener("click",e=>{const b=e.target.closest(".xref");if(b)showPop(b);});
+  // 卡片里的按钮每次筛选都会重建，所以事件挂在 #out 上不挂在按钮上。
+  document.getElementById("out").addEventListener("click",e=>{
+    const act=e.target.closest("[data-act]");
+    if(act){const t=byKey.get(act.dataset.e);if(t)shareOrCopy(t);return;}
+    // 点标题前的条目标号：既跳锚点，又把固定链接拷进剪贴板——文档站的 # 一直是这个约定。
+    const pin=e.target.closest("a.no");
+    if(pin){const [sec,no]=refOf(pin.closest(".card")?.id);const t=byKey.get(sec+":"+no);if(t)copyText(linkOf(t),"这一条的固定链接已复制");return;}
+    const role=e.target.closest("button.chip.role");
+    if(role){const v=role.dataset.role;S.适合.has(v)?S.适合.delete(v):S.适合.add(v);afterFilter();}
+  });
   document.getElementById("toggle-side").onclick=()=>document.body.classList.toggle("open");
   document.getElementById("backdrop").onclick=()=>document.body.classList.remove("open");
-  const q0=new URLSearchParams(location.search).get("q");
-  if(q0){S.q=q0;document.getElementById("f-q").value=q0;}
-  render();
+  readURL();syncUI();
+  if(!applyHash())render();
+  addEventListener("hashchange",()=>applyHash());
 }
 init().catch(err=>{
   document.getElementById("out").innerHTML=`<div class=empty>加载失败：${String(err&&err.message||err)}<br>正文需要经 http 打开，双击本地文件会被浏览器拦下——那种场景请用离线单文件版。</div>`;

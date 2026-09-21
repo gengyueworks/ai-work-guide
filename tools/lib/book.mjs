@@ -89,9 +89,36 @@ export function ratioOf(tags) {
   return "一般";
 }
 
+// 与 index.html 里的 URL_T / URL_G / unwrap / trimURL 逐字一致，改一处要改两处。
+export const URL_T = /https?:\/\/[^\s<>()（）〔】「」『』《》“”‘’"'，。；：、！？]+/;
+export const URL_G = new RegExp(URL_T.source, "g");
+export const unwrap = (s) => (s || "").replace(/<((?:https?|ftp):\/\/[^<>\s]+)>/g, "$1");
+export const trimURL = (u) => u.replace(/[.,;:]+$/, "");
+const AUTOLINK_RE = /<(https?:\/\/[^<>\s]+)>/g;
+
+/**
+ * 出处链接是这本书唯一的信用凭证。正文一律写成 markdown 自动链接 <https://…>，
+ * 浏览器端要先拆掉尖括号再按字符类切；只要切出来的和正文里的不是同一串，
+ * 那条出处就点不开——多一个字符是吞了后缀，少一个是被截断。
+ */
+export function checkLinks(text, file) {
+  const out = [];
+  const hrefs = new Set([...unwrap(text).matchAll(URL_G)].map((m) => trimURL(m[0])));
+  for (const m of text.matchAll(AUTOLINK_RE)) {
+    const want = m[1];
+    if (hrefs.has(want)) continue;
+    const got = [...hrefs].find((h) => h.startsWith(want) || want.startsWith(h));
+    out.push(`${file} 的出处链接在网页里点不开：正文是 ${want}，浏览器会切出 ${got ?? "（什么都没切出来）"}`);
+  }
+  for (const h of hrefs) {
+    if (/[一-鿿]/.test(h)) out.push(`${file} 切出的链接里混进了中文，多半把正文吞进了 href：${h}`);
+  }
+  return out;
+}
+
 export function parseChapter(text, file) {
   const lines = text.split(/\r?\n/);
-  const problems = [];
+  const problems = checkLinks(text, file);
   const h1 = lines.find((l) => l.startsWith("# "));
   const title = h1 ? h1.slice(2).replace(/^\d+\.\s*/, "").trim() : "";
   const intro = pickIntro(lines, h1 ? lines.indexOf(h1) : -1);
